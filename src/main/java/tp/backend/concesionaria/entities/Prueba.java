@@ -1,14 +1,16 @@
 package tp.backend.concesionaria.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import javax.persistence.*;
-import tp.backend.concesionaria.entities.*;
+import lombok.Getter;
+
 
 @Entity
 @Table(name = "pruebas")
 @Data
 public class Prueba {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +27,12 @@ public class Prueba {
     @JoinColumn(name = "id_empleado", referencedColumnName = "legajo")
     private Empleado empleado;
 
-    private String fecha_hora_inicio;
-    private String fecha_hora_fin;
+    @Column(name = "fecha_hora_inicio")
+    private String fechaHoraInicio;
+
+    @Column(name = "fecha_hora_fin")
+    private String fechaHoraFin;
+
     private String comentarios;
+
 }

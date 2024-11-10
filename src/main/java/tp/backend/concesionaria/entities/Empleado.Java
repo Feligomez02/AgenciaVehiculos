@@ -1,8 +1,8 @@
 package tp.backend.concesionaria.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import javax.persistence.*;
-import tp.backend.concesionaria.entities.*;
+
 
 @Entity
 @Table(name = "empleados")
@@ -14,5 +14,7 @@ public class Empleado {
 
     private String nombre;
     private String apellido;
-    private String telefono_contacto;
+    private Long telefono_contacto;
+
 }
+

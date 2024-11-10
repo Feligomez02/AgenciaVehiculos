@@ -11,7 +11,7 @@ public class InteresadoDto {
     private String documento;
     private String nombre;
     private String apellido;
-    private int restringido;
+    private boolean restringido;
     private Long nro_licencia;
     private String fecha_vencimiento_licencia;
 }
