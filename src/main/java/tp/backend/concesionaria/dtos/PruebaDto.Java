@@ -10,5 +10,7 @@ public class PruebaDto {
     private String fecha_hora_inicio;
     private String fecha_hora_fin;
     private String comentarios;
+
+
 }
 

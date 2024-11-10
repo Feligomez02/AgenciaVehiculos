@@ -1,14 +1,16 @@
 package tp.backend.concesionaria.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import javax.persistence.*;
-import tp.backend.concesionaria.entities.*;
+import lombok.Getter;
+
 
 @Entity
 @Table(name = "pruebas")
 @Data
 public class Prueba {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,4 +30,5 @@ public class Prueba {
     private String fecha_hora_inicio;
     private String fecha_hora_fin;
     private String comentarios;
+
 }

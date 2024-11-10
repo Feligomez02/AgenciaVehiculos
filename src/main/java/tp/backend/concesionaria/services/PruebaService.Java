@@ -1,6 +1,14 @@
 package tp.backend.concesionaria.services;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import tp.backend.concesionaria.entities.Prueba;
+
+import jakarta.persistence.EntityNotFoundException;
+import tp.backend.concesionaria.dtos.*;
+import tp.backend.concesionaria.entities.*;
+import tp.backend.concesionaria.repositories.PruebaRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -90,7 +98,7 @@ public class PruebaService {
         dto.setLegajo(empleado.getLegajo());
         dto.setNombre(empleado.getNombre());
         dto.setApellido(empleado.getApellido());
-        dto.setTelefonoContacto(empleado.getTelefonoContacto());
+        dto.setTelefono_contacto(empleado.getTelefono_contacto());
         return dto;
     }
 
@@ -99,41 +107,41 @@ public class PruebaService {
         empleado.setLegajo(dto.getLegajo());
         empleado.setNombre(dto.getNombre());
         empleado.setApellido(dto.getApellido());
-        empleado.setTelefonoContacto(dto.getTelefonoContacto());
+        empleado.setTelefono_contacto(dto.getTelefono_contacto());
         return empleado;
     }
 
     // Mapeo para Interesado
     private InteresadoDto toInteresadoDto(Interesado interesado) {
         InteresadoDto dto = new InteresadoDto();
-        dto.setId(interesado.getId());
-        dto.setTipoDocumento(interesado.getTipoDocumento());
+        dto.setId(Math.toIntExact(interesado.getId()));
+        dto.setTipo_documento(interesado.getTipo_documento());
         dto.setDocumento(interesado.getDocumento());
         dto.setNombre(interesado.getNombre());
         dto.setApellido(interesado.getApellido());
         dto.setRestringido(interesado.isRestringido());
-        dto.setNroLicencia(interesado.getNroLicencia());
-        dto.setFechaVencimientoLicencia(interesado.getFechaVencimientoLicencia());
+        dto.setNro_licencia(Long.valueOf(interesado.getNro_licencia()));
+        dto.setFecha_vencimiento_licencia(interesado.getFecha_vencimiento_licencia());
         return dto;
     }
 
     private Interesado toInteresadoEntity(InteresadoDto dto) {
         Interesado interesado = new Interesado();
-        interesado.setId(dto.getId());
-        interesado.setTipoDocumento(dto.getTipoDocumento());
+        interesado.setId((long) dto.getId());
+        interesado.setTipo_documento(dto.getTipo_documento());
         interesado.setDocumento(dto.getDocumento());
         interesado.setNombre(dto.getNombre());
         interesado.setApellido(dto.getApellido());
-        interesado.setRestringido(dto.isRestringido());
-        interesado.setNroLicencia(dto.getNroLicencia());
-        interesado.setFechaVencimientoLicencia(dto.getFechaVencimientoLicencia());
+        interesado.setRestringido(dto.getRestringido());
+        interesado.setNro_licencia(String.valueOf(dto.getNro_licencia()));
+        interesado.setFecha_vencimiento_licencia(dto.getFecha_vencimiento_licencia());
         return interesado;
     }
 
     // Mapeo Vehiculo
     private VehiculoDto toVehiculoDto(Vehiculo vehiculo) {
         VehiculoDto dto = new VehiculoDto();
-        dto.setId(vehiculo.getId());
+        dto.setId(Math.toIntExact(vehiculo.getId()));
         dto.setPatente(vehiculo.getPatente());
         dto.setModelo(toModeloDto(vehiculo.getModelo()));
         dto.setPosiciones(vehiculo.getPosiciones()
@@ -145,7 +153,7 @@ public class PruebaService {
 
     private Vehiculo toVehiculoEntity(VehiculoDto dto) {
         Vehiculo vehiculo = new Vehiculo();
-        vehiculo.setId(dto.getId());
+        vehiculo.setId((long) dto.getId());
         vehiculo.setPatente(dto.getPatente());
         vehiculo.setModelo(toModeloEntity(dto.getModelo()));
         return vehiculo;
@@ -154,7 +162,7 @@ public class PruebaService {
     // Mapeo Modelo
     private ModeloDto toModeloDto(Modelo modelo) {
         ModeloDto dto = new ModeloDto();
-        dto.setId(modelo.getId());
+        dto.setId(Math.toIntExact(modelo.getId()));
         dto.setDescripcion(modelo.getDescripcion());
         dto.setMarca(toMarcaDto(modelo.getMarca()));
         return dto;
@@ -162,7 +170,7 @@ public class PruebaService {
 
     private Modelo toModeloEntity(ModeloDto dto) {
         Modelo modelo = new Modelo();
-        modelo.setId(dto.getId());
+        modelo.setId((long) dto.getId());
         modelo.setDescripcion(dto.getDescripcion());
         modelo.setMarca(toMarcaEntity(dto.getMarca()));
         return modelo;
@@ -171,23 +179,23 @@ public class PruebaService {
     // Mapeo Marca
     private MarcaDto toMarcaDto(Marca marca) {
         MarcaDto dto = new MarcaDto();
-        dto.setId(marca.getId());
-        dto.setNombre(marca.getNombre());
+        dto.setId(Math.toIntExact(marca.getId()));
+        dto.setMarca(marca.getNombre());
         return dto;
     }
 
     private Marca toMarcaEntity(MarcaDto dto) {
         Marca marca = new Marca();
-        marca.setId(dto.getId());
-        marca.setNombre(dto.getNombre());
+        marca.setId((long) dto.getId());
+        marca.setNombre(dto.getMarca());
         return marca;
     }
 
     // Mapeo Posicion
     private PosicionDto toPosicionDto(Posicion posicion) {
         PosicionDto dto = new PosicionDto();
-        dto.setId(posicion.getId());
-        dto.setFechaHora(posicion.getFechaHora());
+        dto.setId(Math.toIntExact(posicion.getId()));
+        dto.setFecha_hora(posicion.getFecha_hora());
         dto.setLatitud(posicion.getLatitud());
         dto.setLongitud(posicion.getLongitud());
         return dto;
@@ -195,8 +203,8 @@ public class PruebaService {
 
     private Posicion toPosicionEntity(PosicionDto dto) {
         Posicion posicion = new Posicion();
-        posicion.setId(dto.getId());
-        posicion.setFechaHora(dto.getFechaHora());
+        posicion.setId((long) dto.getId());
+        posicion.setFecha_hora(dto.getFecha_hora());
         posicion.setLatitud(dto.getLatitud());
         posicion.setLongitud(dto.getLongitud());
         return posicion;

@@ -1,8 +1,7 @@
 package tp.backend.concesionaria.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import javax.persistence.*;
-import tp.backend.concesionaria.entities.*;
 
 @Entity
 @Table(name = "posiciones")
