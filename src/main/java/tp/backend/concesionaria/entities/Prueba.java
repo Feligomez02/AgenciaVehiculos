@@ -27,8 +27,12 @@ public class Prueba {
     @JoinColumn(name = "id_empleado", referencedColumnName = "legajo")
     private Empleado empleado;
 
-    private String fecha_hora_inicio;
-    private String fecha_hora_fin;
+    @Column(name = "fecha_hora_inicio")
+    private String fechaHoraInicio;
+
+    @Column(name = "fecha_hora_fin")
+    private String fechaHoraFin;
+
     private String comentarios;
 
 }

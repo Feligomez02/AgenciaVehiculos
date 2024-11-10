@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import tp.backend.concesionaria.dtos.*;
 import tp.backend.concesionaria.entities.*;
-import tp.backend.concesionaria.repositories.PruebaRepository;
+import tp.backend.concesionaria.repositories.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +20,10 @@ public class PruebaService {
     public PruebaService(PruebaRepository pruebaRepository) {
         this.pruebaRepository = pruebaRepository;
     }
+
+    @Autowired
+    private InteresadoRepository interesadoRepository;
+
 
 
     // Método de ejemplo para obtener una Prueba por ID y mapear a PruebaDto
@@ -132,7 +136,7 @@ public class PruebaService {
         interesado.setDocumento(dto.getDocumento());
         interesado.setNombre(dto.getNombre());
         interesado.setApellido(dto.getApellido());
-        interesado.setRestringido(dto.getRestringido());
+        interesado.setRestringido(dto.isRestringido());
         interesado.setNro_licencia(String.valueOf(dto.getNro_licencia()));
         interesado.setFecha_vencimiento_licencia(dto.getFecha_vencimiento_licencia());
         return interesado;
@@ -208,5 +212,14 @@ public class PruebaService {
         posicion.setLatitud(dto.getLatitud());
         posicion.setLongitud(dto.getLongitud());
         return posicion;
+    }
+
+    public Interesado getInteresadoById(Long id_interesado) {
+        return interesadoRepository.findById(id_interesado).orElseThrow(()->new EntityNotFoundException("No se encontro un interesado con ese ID"));
+
+    }
+
+    public boolean estaSiendoTesteado(Long vehiculoId) {
+        return pruebaRepository.existsByVehiculoIdAndFechaHoraFinIsNull(vehiculoId);
     }
 }

@@ -1,13 +1,11 @@
 package tp.backend.concesionaria.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import tp.backend.concesionaria.entities.Prueba;
-import java.util.List;
-import org.springframework.data.repository.CrudRepository;
 
-
-
-
+@Repository
 public interface PruebaRepository extends JpaRepository<Prueba, Long> {
+    boolean existsByVehiculoIdAndFechaHoraFinIsNull(Long vehiculoId);
 }
 
