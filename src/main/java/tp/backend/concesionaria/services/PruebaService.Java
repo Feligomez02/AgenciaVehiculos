@@ -9,6 +9,11 @@ public class PruebaService {
     @Autowired
     private PruebaRepository pruebaRepository;
 
+    public PruebaService(PruebaRepository pruebaRepository) {
+        this.pruebaRepository = pruebaRepository;
+    }
+
+
     // Método de ejemplo para obtener una Prueba por ID y mapear a PruebaDto
     public PruebaDto getPruebaById(Long id) {
         Prueba prueba = pruebaRepository.findById(id)
