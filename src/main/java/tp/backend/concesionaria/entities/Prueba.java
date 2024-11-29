@@ -1,38 +1,60 @@
 package tp.backend.concesionaria.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
 
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "pruebas")
+@Table (name = "Pruebas")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Data
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+
+
 public class Prueba {
+    @Id @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-    @Getter
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_vehiculo", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
 
-    @ManyToOne
-    @JoinColumn(name = "id_interesado", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_interesado")
     private Interesado interesado;
 
-    @ManyToOne
-    @JoinColumn(name = "id_empleado", referencedColumnName = "legajo")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 
-    @Column(name = "fecha_hora_inicio")
-    private String fechaHoraInicio;
+    @Basic @Column(name = "fecha_hora_inicio")
+    private Timestamp fecha_hora_inicio;
 
-    @Column(name = "fecha_hora_fin")
-    private String fechaHoraFin;
+    @Basic @Column(name = "fecha_hora_fin")
+    private Timestamp fecha_hora_fin;
 
+    @Basic @Column(name = "comentarios")
     private String comentarios;
+
+    @Column (name =  "incidente")
+    private Boolean inicidente;
+
+
+    public Prueba(Vehiculo vehiculo, Interesado interesado, Empleado empleado, Timestamp fecha_hora_inicio, Timestamp fecha_hora_fin, String comentarios) {
+        this.vehiculo = vehiculo;
+        this.interesado = interesado;
+        this.empleado = empleado;
+        this.fecha_hora_inicio = fecha_hora_inicio;
+        this.fecha_hora_fin = fecha_hora_fin;
+        this.comentarios = comentarios;
+    }
 
 }

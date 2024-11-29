@@ -1,13 +1,15 @@
-
 package tp.backend.concesionaria.dtos;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class PosicionDto {
-    private int id;
-    private int id_vehiculo;
-    private String fecha_hora;
-    private double latitud;
-    private double longitud;
+@NoArgsConstructor
+@AllArgsConstructor
+public class PosicionDTO {
+    private Integer id_vehiculo;
+    private Double latitud;
+    private Double longitud;
 }

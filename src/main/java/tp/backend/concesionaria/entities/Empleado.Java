@@ -1,20 +1,34 @@
 package tp.backend.concesionaria.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+import java.util.Set;
 
 @Entity
-@Table(name = "empleados")
+@Table(name = "Empleados")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Data
+@AllArgsConstructor
+@NoArgsConstructor (force = true)
+
 public class Empleado {
+    @Id @Column(name = "legajo")
+    private int legajo;
 
-    @Id
-    private Long legajo;
-
+    @Basic @Column(name = "nombre")
     private String nombre;
+
+    @Basic @Column(name = "apellido")
     private String apellido;
-    private Long telefono_contacto;
+
+    @Basic @Column(name = "telefono_contacto")
+    private int telefono;
+
+    @OneToMany(mappedBy = "empleado")
+    private Set<Prueba> pruebas;
 
 }
-

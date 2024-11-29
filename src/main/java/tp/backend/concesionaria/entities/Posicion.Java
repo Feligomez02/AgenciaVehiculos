@@ -1,22 +1,45 @@
 package tp.backend.concesionaria.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
+
+import java.sql.Timestamp;
+import java.sql.Time;
+import java.util.Set;
 
 @Entity
-@Table(name = "posiciones")
+@Table (name = "Posiciones")
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
 @Data
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+
 public class Posicion {
+    @Id @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_vehiculo", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
 
-    private String fecha_hora;
-    private double latitud;
-    private double longitud;
+    @Basic @Column(name = "fecha_hora")
+    private Timestamp fechaHora;
+
+    @Basic @Column(name = "latitud")
+    private Double latitud;
+
+    @Basic @Column(name = "longitud")
+    private Double longitud;
+
+    public Posicion(Vehiculo vehiculo, Timestamp fechaHora, Double latitud, Double longitud) {
+        this.vehiculo = vehiculo;
+        this.fechaHora = fechaHora;
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
 }

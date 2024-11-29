@@ -1,22 +1,20 @@
 package tp.backend.concesionaria.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.sql.Timestamp;
 
 @Data
-public class PruebaDto {
-    private Long id;
-    private EmpleadoDto empleado;
-    private InteresadoDto interesado;
-    private VehiculoDto vehiculo;
-    private ModeloDto modelo;
-    private MarcaDto marca;
-    private List<PosicionDto> posiciones;
-    private String fecha_hora_inicio;
-    private String fecha_hora_fin;
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class PruebaDTO {
+    private Integer id;
+    private EmpleadoDTO empleadoDTO;
+    private InteresadoDTO interesadoDTO;
+    private VehiculoDTO vehiculoDTO;
+    private Timestamp fechaHoraInicio;
     private String comentarios;
-
-
 }
-

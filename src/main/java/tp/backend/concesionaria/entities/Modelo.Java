@@ -1,20 +1,33 @@
 package tp.backend.concesionaria.entities;
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
 
+import java.security.Timestamp;
+import java.util.Set;
 
 @Entity
-@Table(name = "modelos")
+@Table (name = "Modelos")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Data
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+
 public class Modelo {
+    @Id @Column(name = "id")
+    private int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @OneToMany(mappedBy = "modelo")
+    private Set<Vehiculo> vehiculos;
 
-    @ManyToOne
-    @JoinColumn(name = "id_marca", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_marca")
     private Marca marca;
 
+    @Basic @Column(name = "descripcion")
     private String descripcion;
 }

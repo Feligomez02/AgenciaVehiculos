@@ -1,13 +1,16 @@
 package tp.backend.concesionaria.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Data
-public class VehiculoDto{
-    private int id;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class VehiculoDTO {
+    private Integer id;
     private String patente;
-    private ModeloDto modelo;
-
-    private List<PosicionDto> posiciones;
+    private ReporteDTO reporteDTO;
 }

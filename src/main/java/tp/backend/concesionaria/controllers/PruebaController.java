@@ -1,55 +1,84 @@
 package tp.backend.concesionaria.controllers;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-import tp.backend.concesionaria.*;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import tp.backend.concesionaria.dtos.*;
-import tp.backend.concesionaria.entities.*;
-import tp.backend.concesionaria.services.*;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import tp.backend.concesionaria.dtos.PruebaDTO;
+import tp.backend.concesionaria.entities.Prueba;
+import tp.backend.concesionaria.repositories.EmpleadoRepository;
+import tp.backend.concesionaria.repositories.PruebaRepository;
+import tp.backend.concesionaria.services.PruebaService;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/pruebas")
 public class PruebaController {
+
     private final PruebaService pruebaService;
+    private final PruebaRepository pruebaRepository;
+    private final EmpleadoRepository empleadoRepository;
 
-
-    public PruebaController(PruebaService pruebaService) {
+    @Autowired
+    public PruebaController(PruebaService pruebaService, PruebaRepository pruebaRepository, EmpleadoRepository empleadoRepository) {
         this.pruebaService = pruebaService;
+        this.pruebaRepository = pruebaRepository;
+        this.empleadoRepository = empleadoRepository;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<PruebaDto> createPrueba(@RequestBody PruebaDto pruebaDto) {
-        // Validar que el cliente no esta restringido y la licencia no vencida.
-        Long interesadoId = (long) pruebaDto.getInteresado().getId();
-        Interesado interesado = pruebaService.getInteresadoById(interesadoId);
 
-        if (interesado.isRestringido()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente restringido para pruebas.");
+    // 1 Endopoint - Crear Prueba
+    @PostMapping("/crear")
+    public ResponseEntity<Prueba> createPrueba(@RequestBody PruebaDTO pruebaDTO) {
+        try {
+            String documento = pruebaDTO.getInteresadoDTO().getDocumento();
+            String patente = pruebaDTO.getVehiculoDTO().getPatente();
+            Integer legajoEmpleado = pruebaDTO.getEmpleadoDTO().getLegajo();
+            String comentarios = pruebaDTO.getComentarios();
+
+            // Llamar al servicio para crear la nueva prueba
+            Prueba nuevaPrueba = pruebaService.crearNuevaPrueba(documento, patente, legajoEmpleado, comentarios);
+
+            // Devolver la entidad Prueba creada
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaPrueba);
+
+        } catch (Exception e) {
+            // Manejar errores y devolver una respuesta adecuada
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        LocalDateTime fechaVencimientoLicencia = LocalDateTime.parse(interesado.getFecha_vencimiento_licencia(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        if (fechaVencimientoLicencia.isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La licencia del interesado esta expirada.");
-        }
-
-        // Validacion de si el vehiculo esta siendo testeado
-        boolean isVehicleBeingTested = pruebaService.estaSiendoTesteado((long) pruebaDto.getVehiculo().getId());
-        if (isVehicleBeingTested) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El vehiculo actualmente esta siendo testeado");
-        }
-
-        // Crear y guardar la prueba
-        PruebaDto savedPrueba = pruebaService.savePrueba(pruebaDto);
-        return ResponseEntity.ok(savedPrueba);
     }
 
+    // 2 Endpoint para listar todas las pruebas en un momento dado
+    @GetMapping("/listar")
+    public ResponseEntity<?> listarPruebas() {
+        List<Prueba> pruebas = pruebaService.obtenerTodasLasPruebas();
+        if (pruebas == null || pruebas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("No hay pruebas cargadas en el sistema.");
+        } else {
+            return ResponseEntity.ok(pruebas);
+        }
+    }
+
+    // 3 Endopoint para finalizar una prueba permitiendo al empleado agregar un comentario
+    @PutMapping("/finalizar")
+    public ResponseEntity<String> finalizarPrueba(@RequestBody PruebaDTO pruebaDTO) {
+        try {
+            Integer id = pruebaDTO.getId();
+            String comentario = pruebaDTO.getComentarios();
+
+            boolean resultado = pruebaService.finalizarPrueba(id, comentario);
+            if (resultado) {
+                return ResponseEntity.ok("Prueba finalizada correctamente.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prueba no encontrada.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al finalizar la prueba.");
+        }
+    }
 }

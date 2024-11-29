@@ -1,17 +1,12 @@
-
-
 package tp.backend.concesionaria.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class InteresadoDto {
-    private int id;
-    private String tipo_documento;
+@NoArgsConstructor
+@AllArgsConstructor
+public class InteresadoDTO {
     private String documento;
-    private String nombre;
-    private String apellido;
-    private boolean restringido;
-    private Long nro_licencia;
-    private String fecha_vencimiento_licencia;
 }

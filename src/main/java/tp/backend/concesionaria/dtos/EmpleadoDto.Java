@@ -1,12 +1,12 @@
-
 package tp.backend.concesionaria.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class EmpleadoDto {
-    private Long legajo;
-    private String nombre;
-    private String apellido;
-    private Long telefono_contacto;
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmpleadoDTO {
+    private Integer legajo;
 }
